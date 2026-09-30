@@ -80,7 +80,7 @@ end
 
 local function toggleHandsUp(status, animType)
     local state = Player(cache.serverId).state
-    if state.gettingCuffed or state.isCuffed or state.isCuffing then return end 
+    if state.gettingCuffed or state.isCuffed or state.isCuffing or state.isInEmote then return end 
 
     if npwd then
         exports.npwd:setPhoneDisabled(status)
@@ -221,7 +221,7 @@ local function setCuffed(enabled, angle, cuffType)
             Wait(0)
             lib.disableControls()
             local vehEntering = GetVehiclePedIsEntering(ped)
-            
+
             if vehEntering ~= 0 then
                 local seat = GetSeatPedIsTryingToEnter(ped)
                 if GetVehicleDoorAngleRatio(vehEntering, seat+1) < 0.2 then
@@ -231,6 +231,7 @@ local function setCuffed(enabled, angle, cuffType)
 
             if veh and preventExitVeh then
                 DisableControlAction(0, 23, true)
+		DisableControlAction(0, 75, true)
             end
         end
     end)
@@ -487,7 +488,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = "ND_Police:cuff",
         icon = "fas fa-handcuffs",
-        label = "Cuff player",
+        label = locale("cuff_player"),
         distance = 1.5,
         items = "cuffs",
         canInteract = function(entity)
@@ -501,7 +502,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = "ND_Police:ziptie",
         icon = "fas fa-handcuffs",
-        label = "Ziptie player",
+        label = locale("ziptie_player"),
         distance = 1.5,
         items = "zipties",
         canInteract = function(entity)
@@ -515,7 +516,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = "ND_Police:uncuff",
         icon = "fas fa-handcuffs",
-        label = "Remove handcuffs",
+        label = locale("remove_cuffs"),
         distance = 1.5,
         items = "handcuffkey",
         canInteract = function(entity)
@@ -528,7 +529,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = "ND_Police:unziptie",
         icon = "fas fa-handcuffs",
-        label = "Remove zipties",
+        label = locale("remove_zipties"),
         distance = 1.5,
         items = "tools",
         canInteract = function(entity)
@@ -541,7 +542,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = "ND_Police:searchPlayer",
         icon = "fa-solid fa-magnifying-glass",
-        label = "Search",
+        label = locale("search_player"),
         distance = 1.5,
         canInteract = function(entity)
             if handsUpStatus or LocalPlayer.state.invBusy then return end
